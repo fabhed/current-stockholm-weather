@@ -1,0 +1,68 @@
+To create a website that shows the current weather in Stockholm, we will use Python with Flask as the web framework and requests library to fetch data from a weather API. We will use the OpenWeatherMap API to get the current weather data.
+
+First, let's create a `requirements.txt` file to list the required packages:
+
+requirements.txt
+```txt
+Flask==2.1.1
+requests==2.26.0
+```
+
+Now, let's create the main application file `app.py`:
+
+app.py
+```python
+from flask import Flask, render_template
+import requests
+
+app = Flask(__name__)
+
+def get_weather_data():
+    """Fetches the current weather data for Stockholm from OpenWeatherMap API."""
+    api_key = "your_api_key_here"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q=Stockholm&appid={api_key}&units=metric"
+    response = requests.get(url)
+    return response.json()
+
+@app.route('/')
+def index():
+    """Renders the main page with the current weather in Stockholm."""
+    weather_data = get_weather_data()
+    temperature = weather_data['main']['temp']
+    return render_template('index.html', temperature=temperature)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
+```
+
+Replace `your_api_key_here` with your actual OpenWeatherMap API key.
+
+Next, let's create the `templates` folder and the `index.html` file inside it:
+
+templates/index.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockholm Weather</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 48px;
+        }
+    </style>
+</head>
+<body>
+    {{ temperature }}°C
+</body>
+</html>
+```
+
+Now, you can run the application by executing `python app.py` in the terminal. The website will be accessible at `http://localhost:8000`.
+
+To summarize, we have created a simple Flask application that fetches the current weather data for Stockholm from the OpenWeatherMap API and displays the temperature in the center of the screen. The application runs on port 8000.
